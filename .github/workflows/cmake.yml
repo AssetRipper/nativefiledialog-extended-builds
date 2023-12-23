@@ -17,7 +17,7 @@ jobs:
         portal: [ {flag: OFF, dep: libgtk-3-dev, name: GTK}, {flag: ON, dep: libdbus-1-dev, name: Portal} ] # The NFD_PORTAL setting defaults to OFF (i.e. uses GTK)
         autoappend: [ {flag: OFF, name: NoAppendExtensions}, {flag: ON, name: AutoAppendExtensions} ] # By default the NFD_PORTAL mode does not append extensions, because it breaks some features of the portal
         compiler: [ {c: clang, cpp: clang++, name: Clang} ]
-        cppstd: [20, 23]
+        cppstd: [20, 2b]
 
     steps:
     - name: Checkout
