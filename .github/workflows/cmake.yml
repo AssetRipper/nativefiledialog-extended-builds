@@ -9,7 +9,7 @@ on:
 jobs:
   build-ubuntu:
     
-    name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, ${{ matrix.shared_lib.name }}, C++${{ matrix.cppstd }}
+    name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, C++${{ matrix.cppstd }}
     runs-on: ${{ matrix.os.label }}
 
     strategy:
@@ -19,7 +19,6 @@ jobs:
         autoappend: [ {flag: OFF, name: NoAppendExtn}, {flag: ON, name: AutoAppendExtn} ] # By default the NFD_PORTAL mode does not append extensions, because it breaks some features of the portal
         compiler: [ {c: gcc, cpp: g++, name: GCC}, {c: clang, cpp: clang++, name: Clang} ] # The default compiler is gcc/g++
         cppstd: [20, 11]
-        shared_lib: [ {flag: ON, name: Shared} ]
 
     steps:
     - name: Checkout
@@ -32,19 +31,19 @@ jobs:
     - name: Installing Dependencies
       run: sudo apt-get update && sudo apt-get install ${{ matrix.portal.dep }}
     - name: Configure
-      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.compiler.c }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DNFD_PORTAL=${{ matrix.portal.flag }} -DNFD_APPEND_EXTENSION=${{ matrix.autoappend.flag }} -DBUILD_SHARED_LIBS=${{ matrix.shared_lib.flag }} -DNFD_BUILD_TESTS=ON ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.compiler.c }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DNFD_PORTAL=${{ matrix.portal.flag }} -DNFD_APPEND_EXTENSION=${{ matrix.autoappend.flag }} -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
       run: cmake --build Upstream/build --target install
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
-        name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, ${{ matrix.shared_lib.name }}, C++${{ matrix.cppstd }}
+        name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, C++${{ matrix.cppstd }}
         path: Upstream/build/src/*
         if-no-files-found: error
   
   build-macos-clang:
 
-    name: MacOS latest - Clang, Shared
+    name: MacOS latest - Clang
     runs-on: macos-latest
 
     steps:
@@ -62,13 +61,13 @@ jobs:
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
-        name: MacOS latest - Clang, Shared
+        name: MacOS latest - Clang
         path: Upstream/build/src/*
         if-no-files-found: error
   
   build-windows-msvc:
 
-    name: Windows latest - MSVC, Shared
+    name: Windows latest - MSVC
     runs-on: windows-latest
 
     steps:
@@ -86,6 +85,6 @@ jobs:
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
-        name: Windows latest - MSVC, Shared
+        name: Windows latest - MSVC
         path: Upstream/build/src/Release/*
         if-no-files-found: error
