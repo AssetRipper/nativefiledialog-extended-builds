@@ -55,7 +55,7 @@ jobs:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
     - name: Configure
-      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON -DCMAKE_GENERATOR_PLATFORM=ARM64 ..
     - name: Build
       run: cmake --build Upstream/build --target install
     - name: Upload test binaries
@@ -79,7 +79,7 @@ jobs:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
     - name: Configure
-      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON -DCMAKE_GENERATOR_PLATFORM=ARM64 ..
     - name: Build
       run: cmake --build Upstream/build --target install --config Release
     - name: Upload test binaries
