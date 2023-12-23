@@ -9,7 +9,7 @@ on:
 jobs:
   build-ubuntu:
 
-    name: Ubuntu - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, C++${{ matrix.cppstd }} - ${{ matrix.arch }}
+    name: Ubuntu - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, C++${{ matrix.cppstd }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -18,7 +18,6 @@ jobs:
         autoappend: [ {flag: OFF, name: NoAppendExtensions}, {flag: ON, name: AutoAppendExtensions} ] # By default the NFD_PORTAL mode does not append extensions, because it breaks some features of the portal
         compiler: [ {c: clang, cpp: clang++, name: Clang} ]
         cppstd: [20]
-        arch: [X64, ARM64]
 
     steps:
     - name: Checkout
@@ -31,13 +30,13 @@ jobs:
     - name: Installing Dependencies
       run: sudo apt-get update && sudo apt-get install ${{ matrix.portal.dep }}
     - name: Configure
-      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.compiler.c }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DNFD_PORTAL=${{ matrix.portal.flag }} -DNFD_APPEND_EXTENSION=${{ matrix.autoappend.flag }} -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON -DCMAKE_GENERATOR_PLATFORM=${{ matrix.arch }} ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.compiler.c }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DNFD_PORTAL=${{ matrix.portal.flag }} -DNFD_APPEND_EXTENSION=${{ matrix.autoappend.flag }} -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
       run: cmake --build Upstream/build --target install
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
-        name: Ubuntu - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, ${{ matrix.arch }}
+        name: Ubuntu - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}
         path: Upstream/build/src/*
         if-no-files-found: error
 
@@ -55,7 +54,7 @@ jobs:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
     - name: Configure
-      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON -DCMAKE_GENERATOR_PLATFORM=ARM64 ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
       run: cmake --build Upstream/build --target install
     - name: Upload test binaries
@@ -67,8 +66,12 @@ jobs:
 
   build-windows:
 
-    name: Windows - MSVC
+    name: Windows - MSVC, ${{ matrix.arch }}
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        arch: [X64, ARM64]
 
     steps:
     - name: Checkout
@@ -79,12 +82,12 @@ jobs:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
     - name: Configure
-      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON -DCMAKE_GENERATOR_PLATFORM=ARM64 ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON -DCMAKE_GENERATOR_PLATFORM=${{ matrix.arch }} ..
     - name: Build
       run: cmake --build Upstream/build --target install --config Release
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
-        name: Windows - MSVC
+        name: Windows - MSVC, ${{ matrix.arch }}
         path: Upstream/build/src/Release/*
         if-no-files-found: error
