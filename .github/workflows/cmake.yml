@@ -19,23 +19,23 @@ jobs:
         autoappend: [ {flag: OFF, name: NoAppendExtn} ] # By default the NFD_PORTAL mode does not append extensions, because it breaks some features of the portal
         compiler: [ {c: gcc, cpp: g++, name: GCC}, {c: clang, cpp: clang++, name: Clang} ] # The default compiler is gcc/g++
         cppstd: [20, 11]
-        shared_lib: [ {flag: OFF, name: Static} ]
+        shared_lib: [ {flag: ON, name: Shared} ]
         include:
         - os: {label: ubuntu-latest, name: latest}
           portal: {flag: ON, dep: libdbus-1-dev, name: Portal}
           autoappend: {flag: ON, name: AutoAppendExtn}
           compiler: {c: gcc, cpp: g++, name: GCC}
           cppstd: 11
-          shared_lib: {flag: OFF, name: Static}
+          shared_lib: {flag: ON, name: Shared}
         - os: {label: ubuntu-latest, name: latest}
           portal: {flag: ON, dep: libdbus-1-dev, name: Portal}
           autoappend: {flag: ON, name: AutoAppendExtn}
           compiler: {c: clang, cpp: clang++, name: Clang}
           cppstd: 11
-          shared_lib: {flag: OFF, name: Static}
+          shared_lib: {flag: ON, name: Shared}
         - os: {label: ubuntu-latest, name: latest}
           portal: {flag: ON, dep: libdbus-1-dev, name: Portal}
-          autoappend: {flag: ON, name: NoAppendExtn}
+          autoappend: {flag: OFF, name: NoAppendExtn}
           compiler: {c: gcc, cpp: g++, name: GCC}
           cppstd: 11
           shared_lib: {flag: ON, name: Shared}
@@ -59,6 +59,7 @@ jobs:
       with:
         name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, ${{ matrix.shared_lib.name }}, C++${{ matrix.cppstd }}
         path: Upstream/build/src/*
+        if-no-files-found: error
   
   build-macos-clang:
 
@@ -82,6 +83,7 @@ jobs:
       with:
         name: MacOS latest - Clang, Shared
         path: Upstream/build/src/*
+        if-no-files-found: error
   
   build-windows-msvc:
 
@@ -105,3 +107,4 @@ jobs:
       with:
         name: Windows latest - MSVC, Shared
         path: Upstream/build/src/Release/*
+        if-no-files-found: error
