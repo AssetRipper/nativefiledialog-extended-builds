@@ -58,9 +58,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, ${{ matrix.shared_lib.name }}, C++${{ matrix.cppstd }}
-        path: |
-          Upstream/build/src/*
-          Upstream/build/test/*
+        path: Upstream/build/src/*
   
   build-macos-clang:
 
@@ -83,9 +81,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: MacOS latest - Clang, Shared
-        path: |
-          Upstream/build/src/*
-          Upstream/build/test/*
+        path: Upstream/build/src/*
   
   build-windows-msvc:
 
@@ -108,6 +104,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Windows latest - MSVC, Shared
-        path: |
-          Upstream/build/src/Release/*
-          Upstream/build/test/Release/*
+        path: Upstream/build/src/Release/*
