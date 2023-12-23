@@ -48,23 +48,19 @@ jobs:
       with:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
-    - name: Change Directory
-      run: cd Upstream
-    - name: List files
-      run: ls
     - name: Installing Dependencies
       run: sudo apt-get update && sudo apt-get install ${{ matrix.portal.dep }}
     - name: Configure
-      run: mkdir build && mkdir install && cd build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.compiler.c }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DNFD_PORTAL=${{ matrix.portal.flag }} -DNFD_APPEND_EXTENSION=${{ matrix.autoappend.flag }} -DBUILD_SHARED_LIBS=${{ matrix.shared_lib.flag }} -DNFD_BUILD_TESTS=ON ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.compiler.c }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }} -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DNFD_PORTAL=${{ matrix.portal.flag }} -DNFD_APPEND_EXTENSION=${{ matrix.autoappend.flag }} -DBUILD_SHARED_LIBS=${{ matrix.shared_lib.flag }} -DNFD_BUILD_TESTS=ON ..
     - name: Build
-      run: cmake --build build --target install
+      run: cmake --build Upstream/build --target Upstream/install
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
         name: Ubuntu ${{ matrix.os.name }} - ${{ matrix.compiler.name }}, ${{ matrix.portal.name }}, ${{ matrix.autoappend.name }}, ${{ matrix.shared_lib.name }}, C++${{ matrix.cppstd }}
         path: |
-          build/src/*
-          build/test/*
+          Upstream/build/src/*
+          Upstream/build/test/*
   
   build-macos-clang:
 
@@ -79,21 +75,17 @@ jobs:
       with:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
-    - name: Change Directory
-      run: cd Upstream
-    - name: List files
-      run: ls
     - name: Configure
-      run: mkdir build && mkdir install && cd build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
-      run: cmake --build build --target install
+      run: cmake --build Upstream/build --target Upstream/install
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
         name: MacOS latest - Clang, Shared
         path: |
-          build/src/*
-          build/test/*
+          Upstream/build/src/*
+          Upstream/build/test/*
   
   build-windows-msvc:
 
@@ -108,18 +100,14 @@ jobs:
       with:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
-    - name: Change Directory
-      run: cd Upstream
-    - name: List files
-      run: ls
     - name: Configure
-      run: mkdir build && mkdir install && cd build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
+      run: mkdir Upstream/build && mkdir Upstream/install && cd Upstream/build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
-      run: cmake --build build --target install --config Release
+      run: cmake --build Upstream/build --target Upstream/install --config Release
     - name: Upload test binaries
       uses: actions/upload-artifact@v3
       with:
         name: Windows latest - MSVC, Shared
         path: |
-          build/src/Release/*
-          build/test/Release/*
+          Upstream/build/src/Release/*
+          Upstream/build/test/Release/*
