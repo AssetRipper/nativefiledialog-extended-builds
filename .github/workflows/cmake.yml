@@ -48,8 +48,10 @@ jobs:
       with:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
-    - name: Configure
+    - name: Change Directory
       run: cd Upstream
+    - name: List files
+      run: ls
     - name: Installing Dependencies
       run: sudo apt-get update && sudo apt-get install ${{ matrix.portal.dep }}
     - name: Configure
@@ -77,8 +79,10 @@ jobs:
       with:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
-    - name: Configure
+    - name: Change Directory
       run: cd Upstream
+    - name: List files
+      run: ls
     - name: Configure
       run: mkdir build && mkdir install && cd build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -pedantic" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
@@ -95,11 +99,7 @@ jobs:
 
     name: Windows latest - MSVC, Shared
     runs-on: windows-latest
-    
-    strategy:
-      matrix:
-        shared_lib: [ {flag: ON, name: Shared} ]
-    
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -108,8 +108,10 @@ jobs:
       with:
         repository: 'btzy/nativefiledialog-extended'
         path: Upstream
-    - name: Configure
+    - name: Change Directory
       run: cd Upstream
+    - name: List files
+      run: ls
     - name: Configure
       run: mkdir build && mkdir install && cd build && cmake -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=ON -DNFD_BUILD_TESTS=ON ..
     - name: Build
